@@ -1,0 +1,185 @@
+version: '3'
+
+services:
+  redis:
+    image: "redis:6.0.8"
+    hostname: redis
+    networks:
+      - tdm
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+
+  postgres:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/${DOCKER_POSTGRES_IMAGE}"
+    tty: true
+    environment:
+      - TDM_DB_USER=${TDM_DB_USER}
+      - TDM_DB_PASSWORD=${TDM_DB_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${TDM_POSTGRES_PORT}:5432"
+    hostname: postgres
+    healthcheck:
+      test: ["CMD", "etc/healthcheck.sh"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tdm
+    restart: unless-stopped
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq
+    hostname: rabbitmq
+    networks:
+      - tdm
+    restart: unless-stopped
+    healthcheck:
+      test: rabbitmq-diagnostics -q status
+      interval: 20s
+      timeout: 30s
+      retries: 3
+    environment:
+      - RABBITMQ_DEFAULT_USER=${TDM_RABBIT_MQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${TDM_RABBIT_MQ_PASSWORD}
+      - RABBITMQ_DEFAULT_VHOST=/
+
+  swagger_ui:
+    image: "swaggerapi/swagger-ui"
+    tty: true
+    environment:
+      BASE_URL: /openapi
+      URL: http://${TDM_HOSTNAME}:${TDM_API_PORT}/docs/openapi.json
+    ports:
+      - ${TDM_SWAGGER_UI_PORT}:8080
+    hostname: swagger_ui
+    networks:
+      - tdm
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/openapi/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  tdm_api:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-api:${TDM_API_VERSION}"
+    tty: true
+    environment:
+      - TDM_VERSION=${TDM_VERSION}
+      - TDM_FERNET_KEY=${TDM_FERNET_KEY}
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
+      - TDM_DB_USER=${TDM_DB_USER}
+      - TDM_DB_PASSWORD=${TDM_DB_PASSWORD}
+      - TDM_ADMIN_USERNAME=${TDM_ADMIN_USERNAME}
+      - TDM_ADMIN_PASSWORD=${TDM_ADMIN_PASSWORD}
+      - TDM_ADMIN_EMAIL=${TDM_ADMIN_EMAIL}
+      - TDM_RABBIT_MQ_USER=${TDM_RABBIT_MQ_USER}
+      - TDM_RABBIT_MQ_PASSWORD=${TDM_RABBIT_MQ_PASSWORD}
+      - TDM_NEXUS_USER=${TDM_NEXUS_USER}
+      - TDM_NEXUS_PASSWORD=${TDM_NEXUS_PASSWORD}
+      - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER}
+      - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD}
+      - TDM_SPARK_SSH_HOST=spark
+      - TDM_SPARK_SSH_PORT=22
+      - TDM_LOG_LEVEL=${TDM_LOG_LEVEL}
+      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_API_PORT}/
+      - TDM_SPARK_EXECUTOR_MEMORY=${TDM_SPARK_EXECUTOR_MEMORY}
+      - TDM_SPARK_DRIVER_MEMORY=${TDM_SPARK_DRIVER_MEMORY}
+      - TDM_SWAGGER_UI_PORT=${TDM_SWAGGER_UI_PORT}
+      - TDM_HOSTNAME=${TDM_HOSTNAME}
+    ports:
+      - "${TDM_API_PORT}:8202"
+    networks:
+      - tdm
+    hostname: tdm_api
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://tdm_api:8202/v1/versions || exit 1" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - postgres
+      - redis
+
+  tdm_ui:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui:${TDM_UI_VERSION}"
+    tty: true
+    environment:
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
+    ports:
+      - "${TDM_UI_PORT}:32080"
+    networks:
+      - tdm
+    restart: unless-stopped
+    links:
+      - "tdm_api:backend"
+    depends_on:
+      - "tdm_api"
+    hostname: tdm_ui
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://tdm_ui:32080/#login || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  tdm_ui_refinitiv:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
+    tty: true
+    environment:
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
+    ports:
+      - "${TDM_UI_REFINITIV_PORT}:32082"
+    networks:
+      - tdm
+    restart: unless-stopped
+    links:
+      - "tdm_api:backend"
+    depends_on:
+      - "tdm_api"
+    hostname: tdm_ui_refinitiv
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://tdm_ui_refinitiv:32082/#login || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  spark:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/${DOCKER_TDM_SPARK_IMAGE}"
+    tty: true
+    environment:
+        - APACHE_SPARK_VERSION=3.0.0
+        - APACHE_HADOOP_VERSION=2.7
+        - TDM_SPARK_CLUSTER_MODE=${TDM_SPARK_CLUSTER_MODE}
+        - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER}
+        - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD}
+        - TDM_SPARK_MASTER_URL=spark://localhost:7077 # for standalone cluster
+        - SPARK_WORKER_INSTANCES=2
+    networks:
+      - tdm
+    restart: unless-stopped
+    hostname: localhost
+    ports:
+      - "${TDM_SPARK_UI_PORT}:8080"
+      - "${TDM_SPARK_WORKER_PORT}:8081-8085"
+      - "${TDM_SPARK_HISTORY_PORT}:18080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres:
+
+networks:
+  tdm:
+    driver: bridge
