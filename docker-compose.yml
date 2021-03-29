@@ -55,7 +55,7 @@ services:
     tty: true
     environment:
       BASE_URL: /openapi
-      URL: http://${TDM_HOSTNAME}:${TDM_API_PORT}/docs/openapi.json
+      URL: http://${TDM_HOSTNAME:-host.docker.internal}:${TDM_API_PORT}/docs/openapi.json
     ports:
       - ${TDM_SWAGGER_UI_PORT}:8080
     hostname: swagger_ui
