@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  tdm_ui_refinitiv:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
+    tty: true
+    environment:
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
+    ports:
+      - "${TDM_UI_REFINITIV_PORT}:32082"
+    networks:
+      - tdm
+    restart: unless-stopped
+    links:
+      - "tdm_api:backend"
+    depends_on:
+      - "tdm_api"
+    hostname: tdm_ui_refinitiv
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://tdm_ui_refinitiv:32082/#login || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5

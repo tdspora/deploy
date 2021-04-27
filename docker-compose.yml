@@ -122,6 +122,7 @@ services:
     restart: unless-stopped
     links:
       - "tdm_api:backend"
+      - "tdm-docs:docs"
     depends_on:
       - "tdm_api"
     hostname: tdm_ui
@@ -171,14 +172,32 @@ services:
       - "${TDM_SPARK_UI_PORT}:8080"
       - "${TDM_SPARK_WORKER_PORT}:8081-8085"
       - "${TDM_SPARK_HISTORY_PORT}:18080"
+    volumes:
+      - spark:/tmp/spark-events
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5
 
+  tdm-docs:
+    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-docs:latest"
+    tty: true
+    networks:
+      - tdm
+    restart: unless-stopped
+    hostname: docs
+    ports:
+      - "3000:3000" 
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://docs:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres:
+  spark:
 
 networks:
   tdm:
