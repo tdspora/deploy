@@ -3,16 +3,16 @@ version: '3'
 services:
 
   postgres:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/${DOCKER_POSTGRES_IMAGE}"
+    image: "${REPO_DOCKER_URL}/${DOCKER_POSTGRES_IMAGE}"
 
   tdm_api:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-api:${TDM_API_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm-api:${TDM_API_VERSION}"
 
   tdm_ui:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui:${TDM_UI_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm-ui:${TDM_UI_VERSION}"
 
   spark:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/${DOCKER_TDM_SPARK_IMAGE}"
+    image: "${REPO_DOCKER_URL}/${DOCKER_TDM_SPARK_IMAGE}"
 
   tdm-docs:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-docs:latest"
+    image: "${REPO_DOCKER_URL}/tdm-docs:latest"
