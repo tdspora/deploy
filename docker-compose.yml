@@ -2,7 +2,7 @@ version: '3'
 
 services:
   redis:
-    image: "redis:6.0.8"
+    image: "redis:6.2.3"
     hostname: redis
     networks:
       - tdm
@@ -11,10 +11,13 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
+    logging:
+      options:
+        max-size: 200m
     restart: unless-stopped
 
   postgres:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/${DOCKER_POSTGRES_IMAGE}"
+    image: "${REPO_DOCKER_URL}/${DOCKER_POSTGRES_IMAGE}"
     tty: true
     environment:
       - TDM_DB_USER=${TDM_DB_USER}
@@ -30,6 +33,9 @@ services:
       retries: 5
     networks:
       - tdm
+    logging:
+      options:
+        max-size: 200m
     restart: unless-stopped
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -39,6 +45,9 @@ services:
     hostname: rabbitmq
     networks:
       - tdm
+    logging:
+      options:
+        max-size: 200m
     restart: unless-stopped
     healthcheck:
       test: rabbitmq-diagnostics -q status
@@ -61,6 +70,9 @@ services:
     hostname: swagger_ui
     networks:
       - tdm
+    logging:
+      options:
+        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/openapi/ || exit 1"]
       interval: 30s
@@ -69,10 +81,9 @@ services:
     restart: unless-stopped
 
   tdm_api:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-api:${TDM_API_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm-api:${TDM_API_VERSION}"
     tty: true
     environment:
-      - TDM_VERSION=${TDM_VERSION}
       - TDM_FERNET_KEY=${TDM_FERNET_KEY}
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
       - TDM_DB_USER=${TDM_DB_USER}
@@ -82,16 +93,12 @@ services:
       - TDM_ADMIN_EMAIL=${TDM_ADMIN_EMAIL}
       - TDM_RABBIT_MQ_USER=${TDM_RABBIT_MQ_USER}
       - TDM_RABBIT_MQ_PASSWORD=${TDM_RABBIT_MQ_PASSWORD}
-      - TDM_NEXUS_USER=${TDM_NEXUS_USER}
-      - TDM_NEXUS_PASSWORD=${TDM_NEXUS_PASSWORD}
       - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER}
       - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD}
       - TDM_SPARK_SSH_HOST=spark
       - TDM_SPARK_SSH_PORT=22
       - TDM_LOG_LEVEL=${TDM_LOG_LEVEL}
       - TDM_URL=http://${TDM_HOSTNAME}:${TDM_API_PORT}/
-      - TDM_SPARK_EXECUTOR_MEMORY=${TDM_SPARK_EXECUTOR_MEMORY}
-      - TDM_SPARK_DRIVER_MEMORY=${TDM_SPARK_DRIVER_MEMORY}
       - TDM_SWAGGER_UI_PORT=${TDM_SWAGGER_UI_PORT}
       - TDM_HOSTNAME=${TDM_HOSTNAME}
     ports:
@@ -99,6 +106,9 @@ services:
     networks:
       - tdm
     hostname: tdm_api
+    logging:
+      options:
+        max-size: 200m
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://tdm_api:8202/v1/versions || exit 1" ]
       interval: 30s
@@ -111,7 +121,7 @@ services:
       - redis
 
   tdm_ui:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui:${TDM_UI_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm-ui:${TDM_UI_VERSION}"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
@@ -126,6 +136,9 @@ services:
     depends_on:
       - "tdm_api"
     hostname: tdm_ui
+    logging:
+      options:
+        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://tdm_ui:32080/#login || exit 1"]
       interval: 30s
@@ -133,7 +146,7 @@ services:
       retries: 5
 
   tdm_ui_refinitiv:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
@@ -147,6 +160,9 @@ services:
     depends_on:
       - "tdm_api"
     hostname: tdm_ui_refinitiv
+    logging:
+      options:
+        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://tdm_ui_refinitiv:32082/#login || exit 1"]
       interval: 30s
@@ -154,12 +170,9 @@ services:
       retries: 5
 
   spark:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/${DOCKER_TDM_SPARK_IMAGE}"
+    image: "${REPO_DOCKER_URL}/${DOCKER_TDM_SPARK_IMAGE}"
     tty: true
     environment:
-        - APACHE_SPARK_VERSION=3.0.0
-        - APACHE_HADOOP_VERSION=2.7
-        - TDM_SPARK_CLUSTER_MODE=${TDM_SPARK_CLUSTER_MODE}
         - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER}
         - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD}
         - TDM_SPARK_MASTER_URL=spark://localhost:7077 # for standalone cluster
@@ -173,7 +186,11 @@ services:
       - "${TDM_SPARK_WORKER_PORT}:8081-8085"
       - "${TDM_SPARK_HISTORY_PORT}:18080"
     volumes:
-      - spark:/tmp/spark-events
+      - spark-events:/tmp/spark-events
+      - spark-logs:/tmp/spark-logs
+    logging:
+      options:
+        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
       interval: 30s
@@ -181,14 +198,17 @@ services:
       retries: 5
 
   tdm-docs:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-docs:latest"
+    image: "${REPO_DOCKER_URL}/tdm-docs:latest"
     tty: true
     networks:
       - tdm
     restart: unless-stopped
     hostname: docs
     ports:
-      - "3000:3000" 
+      - "3000:3000"
+    logging:
+      options:
+        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://docs:3000/ || exit 1"]
       interval: 10s
@@ -197,7 +217,8 @@ services:
 
 volumes:
   postgres:
-  spark:
+  spark-events:
+  spark-logs:
 
 networks:
   tdm:
