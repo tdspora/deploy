@@ -3,7 +3,7 @@ version: '3'
 services:
 
   tdm_ui_refinitiv:
-    image: "${NEXUS_DOCKER_URL}/${DOCKER_REPO}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
