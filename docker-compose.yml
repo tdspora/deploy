@@ -81,7 +81,7 @@ services:
     restart: unless-stopped
 
   tdm_api:
-    image: "${REPO_DOCKER_URL}/tdm-api:${TDM_API_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm_api:${TDM_API_VERSION}"
     tty: true
     environment:
       - TDM_FERNET_KEY=${TDM_FERNET_KEY}
@@ -121,7 +121,7 @@ services:
       - redis
 
   tdm_ui:
-    image: "${REPO_DOCKER_URL}/tdm-ui:${TDM_UI_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm_ui:${TDM_UI_VERSION}"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
@@ -146,7 +146,7 @@ services:
       retries: 5
 
   tdm_ui_refinitiv:
-    image: "${REPO_DOCKER_URL}/tdm-ui-refinitiv:${TDM_UI_REFINITIV_VERSION}"
+    image: "${REPO_DOCKER_URL}/tdm_ui_refinitiv:${TDM_UI_REFINITIV_VERSION}"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
