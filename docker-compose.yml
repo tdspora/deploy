@@ -17,14 +17,14 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: "${REPO_DOCKER_URL}/${DOCKER_POSTGRES_IMAGE}"
+    image: "ridler17/tdm-db-postgresql:latest"
     tty: true
     environment:
-      - TDM_DB_USER=${TDM_DB_USER}
-      - TDM_DB_PASSWORD=${TDM_DB_PASSWORD}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - TDM_DB_USER=${TDM_DB_USER:-tdm}
+      - TDM_DB_PASSWORD=${TDM_DB_PASSWORD:-pa55w0rd}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgrespa55w0rd}
     ports:
-      - "${TDM_POSTGRES_PORT}:5432"
+      - "${TDM_POSTGRES_PORT:-5432}:5432"
     hostname: postgres
     healthcheck:
       test: ["CMD", "etc/healthcheck.sh"]
@@ -55,8 +55,8 @@ services:
       timeout: 30s
       retries: 3
     environment:
-      - RABBITMQ_DEFAULT_USER=${TDM_RABBIT_MQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${TDM_RABBIT_MQ_PASSWORD}
+      - RABBITMQ_DEFAULT_USER=${TDM_RABBIT_MQ_USER:-tdm}
+      - RABBITMQ_DEFAULT_PASS=${TDM_RABBIT_MQ_PASSWORD:-pa55w0rd}
       - RABBITMQ_DEFAULT_VHOST=/
 
   swagger_ui:
@@ -64,9 +64,9 @@ services:
     tty: true
     environment:
       BASE_URL: /openapi
-      URL: http://${TDM_HOSTNAME:-host.docker.internal}:${TDM_API_PORT}/docs/openapi.json
+      URL: http://${TDM_HOSTNAME:-host.docker.internal}:${TDM_API_PORT:-8202}/docs/openapi.json
     ports:
-      - ${TDM_SWAGGER_UI_PORT}:8080
+      - ${TDM_SWAGGER_UI_PORT:-8204}:8080
     hostname: swagger_ui
     networks:
       - tdm
@@ -81,28 +81,28 @@ services:
     restart: unless-stopped
 
   tdm_api:
-    image: "${REPO_DOCKER_URL}/tdm_api:${TDM_API_VERSION}"
+    image: "ridler17/tdm-api:latest"
     tty: true
     environment:
-      - TDM_FERNET_KEY=${TDM_FERNET_KEY}
-      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
-      - TDM_DB_USER=${TDM_DB_USER}
-      - TDM_DB_PASSWORD=${TDM_DB_PASSWORD}
-      - TDM_ADMIN_USERNAME=${TDM_ADMIN_USERNAME}
-      - TDM_ADMIN_PASSWORD=${TDM_ADMIN_PASSWORD}
-      - TDM_ADMIN_EMAIL=${TDM_ADMIN_EMAIL}
-      - TDM_RABBIT_MQ_USER=${TDM_RABBIT_MQ_USER}
-      - TDM_RABBIT_MQ_PASSWORD=${TDM_RABBIT_MQ_PASSWORD}
-      - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER}
-      - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD}
+      - TDM_FERNET_KEY=${TDM_FERNET_KEY:-jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=}
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
+      - TDM_DB_USER=${TDM_DB_USER:-tdm}
+      - TDM_DB_PASSWORD=${TDM_DB_PASSWORD:-pa55w0rd}
+      - TDM_ADMIN_USERNAME=${TDM_ADMIN_USERNAME:-admin}
+      - TDM_ADMIN_PASSWORD=${TDM_ADMIN_PASSWORD:-pa55w0rd}
+      - TDM_ADMIN_EMAIL=${TDM_ADMIN_EMAIL:-admin@companyname.com}
+      - TDM_RABBIT_MQ_USER=${TDM_RABBIT_MQ_USER:-tdm}
+      - TDM_RABBIT_MQ_PASSWORD=${TDM_RABBIT_MQ_PASSWORD:-pa55w0rd}
+      - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER:-tdm}
+      - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD:-pa55w0rd}
       - TDM_SPARK_SSH_HOST=spark
       - TDM_SPARK_SSH_PORT=22
-      - TDM_LOG_LEVEL=${TDM_LOG_LEVEL}
-      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_API_PORT}/
-      - TDM_SWAGGER_UI_PORT=${TDM_SWAGGER_UI_PORT}
-      - TDM_HOSTNAME=${TDM_HOSTNAME}
+      - TDM_LOG_LEVEL=${TDM_LOG_LEVEL:-DEBUG}
+      - TDM_URL=http://${TDM_HOSTNAME:-host.docker.internal}:${TDM_API_PORT:-8202}/
+      - TDM_SWAGGER_UI_PORT=${TDM_SWAGGER_UI_PORT:-8204}
+      - TDM_HOSTNAME=${TDM_HOSTNAME:-host.docker.internal}
     ports:
-      - "${TDM_API_PORT}:8202"
+      - "${TDM_API_PORT:-8202}:8202"
     networks:
       - tdm
     hostname: tdm_api
@@ -121,12 +121,12 @@ services:
       - redis
 
   tdm_ui:
-    image: "${REPO_DOCKER_URL}/tdm_ui:${TDM_UI_VERSION}"
+    image: "ridler17/tdm-ui:latest"
     tty: true
     environment:
-      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
     ports:
-      - "${TDM_UI_PORT}:32080"
+      - "${TDM_UI_PORT:-32080}:32080"
     networks:
       - tdm
     restart: unless-stopped
@@ -146,12 +146,12 @@ services:
       retries: 5
 
   tdm_ui_refinitiv:
-    image: "${REPO_DOCKER_URL}/tdm_ui_refinitiv:${TDM_UI_REFINITIV_VERSION}"
+    image: "ridler17/tdm-ui-refinitiv:latest"
     tty: true
     environment:
-      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY}
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
     ports:
-      - "${TDM_UI_REFINITIV_PORT}:32082"
+      - "${TDM_UI_REFINITIV_PORT:-32082}:32082"
     networks:
       - tdm
     restart: unless-stopped
@@ -170,11 +170,11 @@ services:
       retries: 5
 
   spark:
-    image: "${REPO_DOCKER_URL}/${DOCKER_TDM_SPARK_IMAGE}"
+    image: "ridler17/tdm-spark:latest"
     tty: true
     environment:
-        - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER}
-        - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD}
+        - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER:-tdm}
+        - TDM_SPARK_SSH_PASSWORD=${TDM_SPARK_SSH_PASSWORD:-pa55w0rd}
         - TDM_SPARK_MASTER_URL=spark://localhost:7077 # for standalone cluster
         - SPARK_WORKER_INSTANCES=2
     networks:
@@ -182,9 +182,9 @@ services:
     restart: unless-stopped
     hostname: localhost
     ports:
-      - "${TDM_SPARK_UI_PORT}:8080"
-      - "${TDM_SPARK_WORKER_PORT}:8081-8085"
-      - "${TDM_SPARK_HISTORY_PORT}:18080"
+      - "${TDM_SPARK_UI_PORT:-8080}:8080"
+      - "${TDM_SPARK_WORKER_PORT:-8081-8085}:8081-8085"
+      - "${TDM_SPARK_HISTORY_PORT:-18080}:18080"
     volumes:
       - spark-events:/tmp/spark-events
       - spark-logs:/tmp/spark-logs
@@ -198,7 +198,7 @@ services:
       retries: 5
 
   tdm-docs:
-    image: "${REPO_DOCKER_URL}/tdm-docs:latest"
+    image: "ridler17/tdm-docs:latest"
     tty: true
     networks:
       - tdm
