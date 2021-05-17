@@ -25,7 +25,14 @@ Only if you want to override the default values, create `.env` file, fill it wit
 
 ```ini
 TDM_FERNET_KEY=jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=
+```
+Encryption key for the Spark job descriptors that can contain secrets such as database user and password. 
+The simpliest way to generate new key is to run `dd if=/dev/urandom bs=32 count=1 2>/dev/null | openssl base64` in `bash`.
+```ini
 COMPOSE_PROJECT_NAME=local
+```
+All the containers will have this prefix added to the container name.
+```ini
 TDM_ADMIN_EMAIL=admin@companyname.com
 TDM_ADMIN_USERNAME=admin
 TDM_ADMIN_PASSWORD=<password>
