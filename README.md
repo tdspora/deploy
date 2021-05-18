@@ -9,110 +9,156 @@ Please make sure you have an acces to private docker repo for download TDM.
 
 ## How to install TDM from scratch
 
-1). Create folder `tdm-install`
+1. Create folder `tdm-install`
 
 ```sh
 mkdir tdm-install
 ```
 
-2). Download main file with `wget`:
+2. Download the `docker-compose.yml` file:
 
 ```sh
-wget https://raw.githubusercontent.com/epmc-tdm/deploy/main/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/docker-compose.yml
 ```
 
-Only if you want to override the default values, create `.env` file, fill it with your own values and place near the `docker-compose.yml` file:
+3. Start installation:
 
+```sh
+docker-compose pull && docker-compose up -d
+```
+
+## Configuration
+If you want to change some of the default values:
+- Create file `.env` in the same folder as `docker-compose.yml`
+- Add values from the list below you would like to override
 ```ini
 TDM_FERNET_KEY=jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=
 ```
 Encryption key for the Spark job descriptors that can contain secrets such as database user and password. 
 The simpliest way to generate new key is to run `dd if=/dev/urandom bs=32 count=1 2>/dev/null | openssl base64` in `bash`.
+
+---
 ```ini
 COMPOSE_PROJECT_NAME=local
 ```
 All the containers will have this prefix added to the container name.
+
+---
 ```ini
 TDM_ADMIN_EMAIL=admin@companyname.com
 ```
 Not used. Will be implemented later.
+
+---
 ```ini
 TDM_ADMIN_USERNAME=admin
 ```
 Administrator user name. This is theonly user name supported.
+
+---
 ```ini
 TDM_ADMIN_PASSWORD=<password>
 ```
 Administrator password. There is no rules or limitation for the password complexity.
+
+---
 ```ini
 TDM_APPLICATION_KEY=594df9ea-3565-4145-b9c4-9bbc47ff6200
 ```
 UUID for the application. Static value used in combination with API key to access REST API.
+
+---
 ```ini
 TDM_RABBIT_MQ_USER=tdm
 ```
 Default user name for the RabbitMQ container.
+
+---
 ```ini
 TDM_RABBIT_MQ_PASSWORD=<rabbit_mq_password>
 ```
 Password for the default RabbitMQ user.
+
+---
 ```ini
 TDM_SPARK_SSH_USER=tdm
 ```
 Name of the user the application use to access internal Spark container and submitting Spark jobs.
+
+---
 ```ini
 TDM_SPARK_SSH_PASSWORD=<spark_ssh_password>
 ```
 Password for the SSH user.
+
+---
 ```ini
 TDM_DB_USER=tdm
 ```
 User name the application will use to access internal PostgreSQL instance.
+
+---
 ```ini
 TDM_DB_PASSWORD=<tdm_db_password>
 ```
 The PostgreSQL user password.
+
+---
 ```ini
 TDM_POSTGRES_PORT=5432
 ```
 The internal PostgreSQL instance will expose this port for external connections.
+
+---
 ```ini
 TDM_UI_PORT=32080
 ```
 The user interface for the application will be available on this port. Default URL: http://localhost:32080/
+
+---
 ```ini
 TDM_UI_REFINITIV_PORT=32082
 ```
 The application user interface with altered theme will be available on this port. Default URL: http://localhost:32082/
+
+---
 ```ini
 TDM_SWAGGER_UI_PORT=8204
 ```
+Swagger UI configured to show Open API 3.0 specification of the application REST API. Also, it allows issuing sample REST API calls.
 
+---
 ```ini
 TDM_API_PORT=8202
 ```
+REST API endpoint port number. For example, to request versions of the components use http://localhost:8202/v1/versions
 
+---
 ```ini
 TDM_SPARK_UI_PORT=8100
 ```
+The port exposed for the Apache Spark master node UI.
 
+---
 ```ini
 TDM_SPARK_WORKER_PORT=8101-8105
 ```
+The port exposed for the Apache Spark worker nodes UI.
 
+---
 ```ini
 TDM_SPARK_HISTORY_PORT=18090
 ```
+The port exposed for the Apache Spark History Server UI.
 
+---
 ```ini
 TDM_LOG_LEVEL=DEBUG
 ```
+Granularity level of logs collected during execution of pipelines. Valid values are ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and OFF.
 
-4). Launch install process:
+---
 
-```sh
-docker-compose pull && docker-compose up -d
-```
 
 ## How to update TDM and restore all your data
 
