@@ -34,24 +34,77 @@ COMPOSE_PROJECT_NAME=local
 All the containers will have this prefix added to the container name.
 ```ini
 TDM_ADMIN_EMAIL=admin@companyname.com
+```
+Not used. Will be implemented later.
+```ini
 TDM_ADMIN_USERNAME=admin
+```
+Administrator user name. This is theonly user name supported.
+```ini
 TDM_ADMIN_PASSWORD=<password>
+```
+Administrator password. There is no rules or limitation for the password complexity.
+```ini
 TDM_APPLICATION_KEY=594df9ea-3565-4145-b9c4-9bbc47ff6200
+```
+UUID for the application. Static value used in combination with API key to access REST API.
+```ini
 TDM_RABBIT_MQ_USER=tdm
+```
+Default user name for the RabbitMQ container.
+```ini
 TDM_RABBIT_MQ_PASSWORD=<rabbit_mq_password>
+```
+Password for the default RabbitMQ user.
+```ini
 TDM_SPARK_SSH_USER=tdm
+```
+Name of the user the application use to access internal Spark container and submitting Spark jobs.
+```ini
 TDM_SPARK_SSH_PASSWORD=<spark_ssh_password>
+```
+Password for the SSH user.
+```ini
 TDM_DB_USER=tdm
+```
+User name the application will use to access internal PostgreSQL instance.
+```ini
 TDM_DB_PASSWORD=<tdm_db_password>
-POSTGRES_PASSWORD=<postgres_password>
+```
+The PostgreSQL user password.
+```ini
 TDM_POSTGRES_PORT=5432
+```
+The internal PostgreSQL instance will expose this port for external connections.
+```ini
 TDM_UI_PORT=32080
+```
+The user interface for the application will be available on this port. Default URL: http://localhost:32080/
+```ini
 TDM_UI_REFINITIV_PORT=32082
+```
+The application user interface with altered theme will be available on this port. Default URL: http://localhost:32082/
+```ini
 TDM_SWAGGER_UI_PORT=8204
+```
+
+```ini
 TDM_API_PORT=8202
+```
+
+```ini
 TDM_SPARK_UI_PORT=8100
+```
+
+```ini
 TDM_SPARK_WORKER_PORT=8101-8105
+```
+
+```ini
 TDM_SPARK_HISTORY_PORT=18090
+```
+
+```ini
 TDM_LOG_LEVEL=DEBUG
 ```
 
