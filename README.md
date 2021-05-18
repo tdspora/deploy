@@ -160,8 +160,9 @@ Granularity level of logs collected during execution of pipelines. Valid values 
 
 ---
 
+# Maintenance
 
-## How to update and restore all your data
+## Upgrading and restoring repository contents
 
 If you are performing an upgrade you have to backup all your data saved into TDM tool.
 Since we use postgres database the backup process is quite simple.
