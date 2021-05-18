@@ -163,6 +163,7 @@ Granularity level of logs collected during execution of pipelines. Valid values 
 TDM_HOSTNAME=localhost
 ```
 The FQDN of the host serving the application REST API endpoints. Along with `TDM_API_PORT` defines full URL (`TDM_URL`) that the backend includes into job descriptors. The pipelines execution engine reports status of the job to the `${TDM_URL}/v1/executions/<executionId>/progress` endpoint. If this endpoint is not accessible from the Apache Spark cluster, the status will not be updated dynamically, but only at the end of the job execution.
+
 ---
 
 # Maintenance
