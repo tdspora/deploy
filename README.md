@@ -15,22 +15,23 @@ Please make sure you have an acces to private docker repo for download TDM.
 mkdir tdm-install
 ```
 
-2. Download the `docker-compose.yml` file:
+2. Download the `docker-compose.yml` file
 
 ```sh
 curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/docker-compose.yml
 ```
 
-3. Start installation:
+3. Start installation
 
 ```sh
 docker-compose pull && docker-compose up -d
 ```
 
 ## Configuration
-If you want to change some of the default values:
+If you want to change some of the default values
 - Create file `.env` in the same folder as `docker-compose.yml`
 - Add values from the list below you would like to override
+### Environment variables
 ```ini
 TDM_FERNET_KEY=jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=
 ```
@@ -160,7 +161,7 @@ Granularity level of logs collected during execution of pipelines. Valid values 
 ---
 
 
-## How to update TDM and restore all your data
+## How to update and restore all your data
 
 If you are performing an upgrade you have to backup all your data saved into TDM tool.
 Since we use postgres database the backup process is quite simple.
@@ -171,7 +172,7 @@ Check the variable `COMPOSE_PROJECT_NAME` in your `.env.` file
 cat .env | grep COMPOSE_PROJECT_NAME
 ```
 
-1). At first, you have to save data from the Postgres container.
+1. At first, you have to save data from the Postgres container.
 You can run a simple command which will save Postgres dump on your `/tmp` folder (not in the container!)
 
 ```sh
@@ -180,31 +181,31 @@ docker exec -it -u postgres <project_name>_postgres_1 pg_dumpall > /tmp/tdm.dump
 
 **Before you will start the restore process, please make sure you have the dump file in your folder!**
 
-2). Go to the folder with the docker-compose file and stop all the containers:
+2. Go to the folder with the docker-compose file and stop all the containers
 
 ```sh
 docker-compose down
 ```
 
-3). Let's take a look at the volumes we have:
+3. Let's take a look at the volumes we have
 
 ```sh
 docker volume ls
 ```
 
-4). Postgres volume must be something like `<compose_project_name>_postgres_1`. Delete it with:
+4. Postgres volume must be something like `<compose_project_name>_postgres_1`. Delete it with
 
 ```sh
 docker volume rm <compose_project_name>_postgres
 ```
 
-5). Launch TDM with docker-compose:
+5. Launch TDM with docker-compose
 
 ```sh
 docker-compose pull && docker-compose up -d
 ```
 
-5). Do not login into TDM for that moment*.
+6. Do not login into TDM for that moment*.
 Copy dump to the container:
 
 ```sh
@@ -213,13 +214,13 @@ docker cp /tmp/tdm.dump <container_name>:/tmp
 
 **If you performed login into TDM you have to restart TDM Postgres container because login operation creating session within Postgres DB and you will not be able to drop database*
 
-6). Login into Postgres container (or use Portainer) with Postgres user and bash shell:
+7. Login into Postgres container (or use Portainer) with Postgres user and bash shell:
 
 ```sh
 docker exec -it -u postgres <container_name> bash
 ```
 
-7). Run the following commands within the Postgres container
+8. Run the following commands within the Postgres container
 
 ```sh
 psql -U postgres -c "DROP DATABASE tdm;"
