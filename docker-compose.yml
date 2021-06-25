@@ -64,7 +64,7 @@ services:
     tty: true
     environment:
       BASE_URL: /openapi
-      URL: http://${TDM_HOSTNAME:-host.docker.internal}:${TDM_API_PORT:-8202}/docs/openapi.json
+      URL: http://${TDM_HOSTNAME}:${TDM_API_PORT:-8202}/docs/openapi.json
     ports:
       - ${TDM_SWAGGER_UI_PORT:-8204}:8080
     hostname: swagger_ui
@@ -98,9 +98,9 @@ services:
       - TDM_SPARK_SSH_HOST=spark
       - TDM_SPARK_SSH_PORT=22
       - TDM_LOG_LEVEL=${TDM_LOG_LEVEL:-DEBUG}
-      - TDM_URL=http://${TDM_HOSTNAME:-host.docker.internal}:${TDM_API_PORT:-8202}/
+      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_API_PORT:-8202}/
       - TDM_SWAGGER_UI_PORT=${TDM_SWAGGER_UI_PORT:-8204}
-      - TDM_HOSTNAME=${TDM_HOSTNAME:-host.docker.internal}
+      - TDM_HOSTNAME=${TDM_HOSTNAME}
     ports:
       - "${TDM_API_PORT:-8202}:8202"
     networks:
