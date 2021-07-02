@@ -116,9 +116,12 @@ services:
       retries: 5
     restart: unless-stopped
     depends_on:
-      - rabbitmq
-      - postgres
-      - redis
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   tdm_ui:
     image: "ridler17/tdm-ui:latest"
