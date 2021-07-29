@@ -41,7 +41,7 @@ services:
       - postgres:/var/lib/postgresql/data
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3.8.19
     hostname: rabbitmq
     networks:
       - tdm
