@@ -24,7 +24,7 @@ curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/docker-compose.y
 3. Start installation
 
 ```sh
-docker-compose pull && docker-compose up -d
+export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
 ```
 
 ## Configuration
