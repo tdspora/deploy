@@ -197,6 +197,9 @@ services:
       - ${TDM_PORT:-32080}:3333
       - ${SPARK_UI_PORT:-4040}:4040
       - ${SPARK_HISTORY_PORT:-18080}:18080
+#    volumes:
+#      - ./conf:/etc/nginx/conf.d
+#      - ./cert:/root/cert
     logging:
       options:
         max-size: 200m
