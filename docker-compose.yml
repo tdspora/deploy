@@ -64,7 +64,8 @@ services:
     tty: true
     environment:
       BASE_URL: /openapi
-      URL: http://${TDM_HOSTNAME}:${TDM_PORT:-32080}/v1/docs/openapi.json
+#      URL: http://${TDM_HOSTNAME}:${TDM_PORT:-32080}/v1/docs/openapi.json
+      URL: http://${TDM_HOSTNAME}/v1/docs/openapi.json
     hostname: swagger_ui
     networks:
       - tdm
@@ -96,8 +97,9 @@ services:
       - TDM_SPARK_SSH_HOST=spark
       - TDM_SPARK_SSH_PORT=22
       - TDM_LOG_LEVEL=${TDM_LOG_LEVEL:-DEBUG}
-      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_PORT:-32080}/v1/
-      - TDM_PORT=${TDM_PORT:-32080}
+#      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_PORT:-32080}/v1/
+      - TDM_URL=http://${TDM_HOSTNAME}/v1/
+      - TDM_PORT=${TDM_PORT:-80}
       - TDM_HOSTNAME=${TDM_HOSTNAME}
     networks:
       - tdm
@@ -106,7 +108,7 @@ services:
       options:
         max-size: 200m
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://tdm-nginx:3333/v1/versions || exit 1" ]
+      test: [ "CMD-SHELL", "curl -f http://tdm-nginx/v1/versions || exit 1" ]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -194,8 +196,8 @@ services:
     hostname: tdm-nginx
     restart: always
     ports:
-      - ${TDM_PORT:-32080}:3333
-      - ${SPARK_UI_PORT:-4040}:4040
+      - ${TDM_PORT:-80}:80
+      - ${SPARK_UI_PORT:-8080}:8080
       - ${SPARK_HISTORY_PORT:-18080}:18080
 #    volumes:
 #      - ./conf:/etc/nginx/conf.d
