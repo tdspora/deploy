@@ -116,7 +116,7 @@ services:
       retries: 5
     restart: unless-stopped
     volumes:
-      - ml-csv:/tdm_api/csv
+      - csv_vol:/tdm_api/csv
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -200,7 +200,7 @@ volumes:
   postgres:
   spark-events:
   spark-logs:
-  ml-csv:
+  csv_vol:
 
 networks:
   tdm:
