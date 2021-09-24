@@ -54,9 +54,9 @@ services:
       interval: 20s
       timeout: 30s
       retries: 3
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
-      - RABBITMQ_DEFAULT_USER=${TDM_RABBIT_MQ_USER:-tdm}
-      - RABBITMQ_DEFAULT_PASS=${TDM_RABBIT_MQ_PASSWORD:-pa55w0rd}
       - RABBITMQ_DEFAULT_VHOST=/
 
   swagger_ui:
