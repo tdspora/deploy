@@ -55,7 +55,7 @@ services:
       timeout: 30s
       retries: 3
     volumes:
-      - ./rabbitconf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitconf:/etc/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_VHOST=/
 
