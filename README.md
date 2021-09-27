@@ -9,19 +9,14 @@ Please make sure you have an acces to private docker repo for download TDM.
 
 ## How to install TDM from scratch
 
-1. Create folder `tdm-install`
+1. Clone repository
 
 ```sh
-mkdir tdm-install
+git clone https://github.com/epmc-tdm/deploy.git
+cd deploy
 ```
 
-2. Download the `docker-compose.yml` file
-
-```sh
-curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/docker-compose.yml
-```
-
-3. Start installation
+2. Start installation
 
 ```sh
 export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
@@ -31,6 +26,7 @@ export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
 If you want to change some of the default values
 - Create file `.env` in the same folder as `docker-compose.yml`
 - Add values from the list below you would like to override
+- For RabbitMQ change files into `rabbitconf/rabbitmq.conf` file
 ### Environment variables
 ```ini
 TDM_FERNET_KEY=jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=
