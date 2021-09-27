@@ -13,10 +13,15 @@ Please make sure you have an acces to private docker repo for download TDM.
 
 ```sh
 git clone https://github.com/epmc-tdm/deploy.git
+```
+
+2. Navigate to folder
+
+```sh
 cd deploy
 ```
 
-2. Start installation
+3. Start installation
 
 ```sh
 export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
