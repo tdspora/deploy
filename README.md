@@ -73,13 +73,13 @@ UUID for the application. Static value used in combination with API key to acces
 ```ini
 TDM_RABBIT_MQ_USER=tdm
 ```
-Default user name for the RabbitMQ container.
+Default user name for the RabbitMQ container. Must be the same as in configuration file!
 
 ---
 ```ini
 TDM_RABBIT_MQ_PASSWORD=<rabbit_mq_password>
 ```
-Password for the default RabbitMQ user.
+Password for the default RabbitMQ user. Must be the same as in configuration file!
 
 ---
 ```ini
