@@ -41,7 +41,7 @@ services:
       - postgres:/var/lib/postgresql/data
 
   rabbitmq:
-    image: rabbitmq:3.8.19
+    image: rabbitmq
     hostname: rabbitmq
     networks:
       - tdm
@@ -54,9 +54,9 @@ services:
       interval: 20s
       timeout: 30s
       retries: 3
+    volumes:
+      - ./rabbitconf:/etc/rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=${TDM_RABBIT_MQ_USER:-tdm}
-      - RABBITMQ_DEFAULT_PASS=${TDM_RABBIT_MQ_PASSWORD:-pa55w0rd}
       - RABBITMQ_DEFAULT_VHOST=/
 
   swagger_ui:
@@ -64,9 +64,8 @@ services:
     tty: true
     environment:
       BASE_URL: /openapi
-      URL: http://${TDM_HOSTNAME}:${TDM_API_PORT:-8202}/docs/openapi.json
-    ports:
-      - ${TDM_SWAGGER_UI_PORT:-8204}:8080
+#      URL: http://${TDM_HOSTNAME}:${TDM_PORT:-32080}/v1/docs/openapi.json
+      URL: http://${TDM_HOSTNAME}/v1/docs/openapi.json
     hostname: swagger_ui
     networks:
       - tdm
@@ -98,11 +97,10 @@ services:
       - TDM_SPARK_SSH_HOST=spark
       - TDM_SPARK_SSH_PORT=22
       - TDM_LOG_LEVEL=${TDM_LOG_LEVEL:-DEBUG}
-      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_API_PORT:-8202}/
-      - TDM_SWAGGER_UI_PORT=${TDM_SWAGGER_UI_PORT:-8204}
+#      - TDM_URL=http://${TDM_HOSTNAME}:${TDM_PORT:-32080}/v1/
+      - TDM_URL=http://${TDM_HOSTNAME}/v1/
+      - TDM_PORT=${TDM_PORT:-80}
       - TDM_HOSTNAME=${TDM_HOSTNAME}
-    ports:
-      - "${TDM_API_PORT:-8202}:8202"
     networks:
       - tdm
     hostname: tdm_api
@@ -110,7 +108,7 @@ services:
       options:
         max-size: 200m
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://tdm_api:8202/v1/versions || exit 1" ]
+      test: [ "CMD-SHELL", "curl -f http://tdm-nginx/v1/versions || exit 1" ]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -130,8 +128,6 @@ services:
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
-    ports:
-      - "${TDM_UI_PORT:-32080}:32080"
     networks:
       - tdm
     restart: unless-stopped
@@ -162,10 +158,6 @@ services:
       - tdm
     restart: unless-stopped
     hostname: localhost
-    ports:
-      - "${TDM_SPARK_UI_PORT:-8080}:8080"
-      - "${TDM_SPARK_WORKER_PORT:-8081-8085}:8081-8085"
-      - "${TDM_SPARK_HISTORY_PORT:-18080}:18080"
     volumes:
       - spark-events:/tmp/spark-events
       - spark-logs:/tmp/spark-logs
@@ -185,8 +177,6 @@ services:
       - tdm
     restart: unless-stopped
     hostname: docs
-    ports:
-      - "3000:3000"
     logging:
       options:
         max-size: 200m
@@ -195,6 +185,32 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  tdm-nginx:
+    image: tdm-nginx:latest
+    tty: true
+    environment:
+      - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
+    networks:
+      - tdm
+    hostname: tdm-nginx
+    restart: always
+    ports:
+      - ${TDM_PORT:-80}:80
+      - ${SPARK_UI_PORT:-8080}:8080
+      - ${SPARK_HISTORY_PORT:-18080}:18080
+#    volumes:
+#      - ./conf:/etc/nginx/conf.d
+#      - ./cert:/root/cert
+    logging:
+      options:
+        max-size: 200m
+    depends_on:
+      - tdm_ui
+      - tdm_api
+      - tdm-docs
+      - spark
+#      - tdm-keycloak
 
 volumes:
   postgres:
