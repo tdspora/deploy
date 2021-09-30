@@ -113,9 +113,9 @@ The internal PostgreSQL instance will expose this port for external connections.
 
 ---
 ```ini
-TDM_UI_PORT=32080
+TDM_PORT=80
 ```
-The user interface for the application will be available on this port. Default URL: http://localhost:32080/
+The user interface for the application will be available on this port. Default URL: http://localhost:80/
 
 ---
 ```ini
@@ -125,31 +125,13 @@ The application user interface with altered theme will be available on this port
 
 ---
 ```ini
-TDM_SWAGGER_UI_PORT=8204
-```
-Swagger UI configured to show Open API 3.0 specification of the application REST API. Also, it allows issuing sample REST API calls.
-
----
-```ini
-TDM_API_PORT=8202
-```
-REST API endpoint port number. For example, to request versions of the components use http://localhost:8202/v1/versions
-
----
-```ini
-TDM_SPARK_UI_PORT=8100
+TDM_SPARK_UI_PORT=8080
 ```
 The port exposed for the Apache Spark master node UI.
 
 ---
 ```ini
-TDM_SPARK_WORKER_PORT=8101-8105
-```
-The port exposed for the Apache Spark worker nodes UI.
-
----
-```ini
-TDM_SPARK_HISTORY_PORT=18090
+TDM_SPARK_HISTORY_PORT=18080
 ```
 The port exposed for the Apache Spark History Server UI.
 
