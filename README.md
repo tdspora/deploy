@@ -25,7 +25,6 @@ export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
 If you want to change some of the default values
 - Create file `.env` in the same folder as `docker-compose.yml`
 - Add values from the list below you would like to override
-- For RabbitMQ change files into `rabbitconf/rabbitmq.conf` file
 ### Environment variables
 ```ini
 TDM_FERNET_KEY=jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=
