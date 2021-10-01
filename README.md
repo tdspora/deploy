@@ -9,19 +9,13 @@ Please make sure you have an acces to private docker repo for download TDM.
 
 ## How to install TDM from scratch
 
-1. Clone repository
+1. Download `start.sh` file and execute it
 
 ```sh
-git clone https://github.com/epmc-tdm/deploy.git
+bash start.sh
 ```
 
-2. Navigate to folder
-
-```sh
-cd deploy
-```
-
-3. Start installation
+2. Start installation
 
 ```sh
 export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
@@ -73,13 +67,13 @@ UUID for the application. Static value used in combination with API key to acces
 ```ini
 TDM_RABBIT_MQ_USER=tdm
 ```
-Default user name for the RabbitMQ container. Must be the same as in configuration file!
+User name for the RabbitMQ container.
 
 ---
 ```ini
 TDM_RABBIT_MQ_PASSWORD=<rabbit_mq_password>
 ```
-Password for the default RabbitMQ user. Must be the same as in configuration file!
+Password for the default RabbitMQ user.
 
 ---
 ```ini
