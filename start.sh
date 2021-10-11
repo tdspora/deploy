@@ -7,4 +7,4 @@ export $(grep -v '^#' .env | xargs -0)
 fi
 
 echo "default_user=${TDM_RABBIT_MQ_USER:-tdm}">./rabbitconf/rabbitmq.conf
-echo -n "default_passwsord=${TDM_RABBIT_MQ_PWD:-pa55w0rd}">>./rabbitconf/rabbitmq.conf
+echo -n "default_pass=${TDM_RABBIT_MQ_PWD:-pa55w0rd}">>./rabbitconf/rabbitmq.conf
