@@ -83,7 +83,7 @@ services:
     image: "ridler17/tdm-api:latest"
     tty: true
     environment:
-      - TDM_FERNET_KEY=${TDM_FERNET_KEY:-jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=}
+      - TDM_FERNET_KEY=${TDM_FERNET_KEY:-F94ALRGQKFqYQqc-LveNA4uSjxLwI0qmZRzfzMc6qME=}
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
       - TDM_DB_USER=${TDM_DB_USER:-tdm}
       - TDM_DB_PASSWORD=${TDM_DB_PASSWORD:-pa55w0rd}
