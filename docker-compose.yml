@@ -113,6 +113,8 @@ services:
     restart: unless-stopped
     volumes:
       - csv_vol:/tdm_api/csv
+      - jars:/tdm_api/lib
+      - jsons:/var/configurations/
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -161,7 +163,7 @@ services:
       - spark-logs:/tmp/spark-logs
     logging:
       options:
-        max-size: 200m
+        max-size: 800m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
       interval: 30s
@@ -183,6 +185,23 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  tdm-ssh:
+    image: tdm-ssh:latest
+    hostname: tdm_ssh
+    environment:
+      - TDM_FERNET_KEY=${TDM_FERNET_KEY:-F94ALRGQKFqYQqc-LveNA4uSjxLwI0qmZRzfzMc6qME=}
+    networks:
+      - tdm
+    ports:
+      - 5050:5050
+    logging:
+      options:
+        max-size: 800m
+    restart: always
+    volumes:
+      - jsons:/var/configurations/
+      - jars:/tdm_ssh/jars
 
   tdm-nginx:
     image: "ridler17/tdm-nginx:latest"
@@ -215,6 +234,8 @@ volumes:
   spark-events:
   spark-logs:
   csv_vol:
+  jsons:
+  jars:
 
 networks:
   tdm:
