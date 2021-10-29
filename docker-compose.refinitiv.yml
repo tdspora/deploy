@@ -17,9 +17,6 @@ services:
     depends_on:
       - "tdm_api"
     hostname: tdm_ui_refinitiv
-    logging:
-      options:
-        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://tdm_ui_refinitiv:32082/#login || exit 1"]
       interval: 30s
