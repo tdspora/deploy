@@ -11,9 +11,6 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
-    logging:
-      options:
-        max-size: 200m
     restart: unless-stopped
 
   postgres:
@@ -33,9 +30,6 @@ services:
       retries: 5
     networks:
       - tdm
-    logging:
-      options:
-        max-size: 200m
     restart: unless-stopped
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -45,9 +39,6 @@ services:
     hostname: rabbitmq
     networks:
       - tdm
-    logging:
-      options:
-        max-size: 200m
     restart: unless-stopped
     healthcheck:
       test: rabbitmq-diagnostics -q status
@@ -68,9 +59,6 @@ services:
     hostname: swagger_ui
     networks:
       - tdm
-    logging:
-      options:
-        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/openapi/ || exit 1"]
       interval: 30s
@@ -102,9 +90,6 @@ services:
     networks:
       - tdm
     hostname: tdm_api
-    logging:
-      options:
-        max-size: 200m
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://tdm-nginx/v1/versions || exit 1" ]
       interval: 30s
@@ -137,9 +122,6 @@ services:
     depends_on:
       - "tdm_api"
     hostname: tdm_ui
-    logging:
-      options:
-        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://tdm_ui:32080/#login || exit 1"]
       interval: 30s
@@ -161,9 +143,6 @@ services:
     volumes:
       - spark-events:/tmp/spark-events
       - spark-logs:/tmp/spark-logs
-    logging:
-      options:
-        max-size: 800m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
       interval: 30s
@@ -177,9 +156,6 @@ services:
       - tdm
     restart: unless-stopped
     hostname: docs
-    logging:
-      options:
-        max-size: 200m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://docs:3000/ || exit 1"]
       interval: 10s
@@ -195,9 +171,6 @@ services:
       - tdm
     ports:
       - 5050:5050
-    logging:
-      options:
-        max-size: 800m
     restart: always
     volumes:
       - jsons:/var/configurations/
@@ -219,9 +192,6 @@ services:
 #    volumes:
 #      - ./conf:/etc/nginx/conf.d
 #      - ./cert:/root/cert
-    logging:
-      options:
-        max-size: 200m
     depends_on:
       - tdm_ui
       - tdm_api
