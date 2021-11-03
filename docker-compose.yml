@@ -176,7 +176,7 @@ services:
     volumes:
       - jsons:/var/configurations/
       - jars:/tdm_ssh/jars
-      - logs:/tdm_ssh/logs
+      - logs:/tmp/logs
 
   tdm-nginx:
     image: "ridler17/tdm-nginx:latest"
