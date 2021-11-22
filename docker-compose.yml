@@ -97,7 +97,10 @@ services:
       retries: 5
     restart: unless-stopped
     volumes:
+      - logs:/tdm_api/logs
       - csv_vol:/tdm_api/csv
+      - jars:/tdm_api/lib
+      - jsons:/var/configurations/
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -160,6 +163,21 @@ services:
       timeout: 5s
       retries: 5
 
+  tdm-ssh:
+    image: tdm-ssh:latest
+    hostname: tdm_ssh
+    environment:
+      - TDM_FERNET_KEY=${TDM_FERNET_KEY:-F94ALRGQKFqYQqc-LveNA4uSjxLwI0qmZRzfzMc6qME=}
+    networks:
+      - tdm
+    ports:
+      - 5050:5050
+    restart: always
+    volumes:
+      - jsons:/var/configurations/
+      - jars:/tdm_ssh/jars
+      - logs:/tmp/logs
+
   tdm-nginx:
     image: "ridler17/tdm-nginx:latest"
     tty: true
@@ -188,6 +206,9 @@ volumes:
   spark-events:
   spark-logs:
   csv_vol:
+  jsons:
+  jars:
+  logs:
 
 networks:
   tdm:
