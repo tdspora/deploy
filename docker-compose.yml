@@ -164,7 +164,7 @@ services:
       retries: 5
 
   tdm-ssh:
-    image: tdm-ssh:latest
+    image: "ridler17/tdm_ssh:latest"
     hostname: tdm_ssh
     environment:
       - TDM_FERNET_KEY=${TDM_FERNET_KEY:-F94ALRGQKFqYQqc-LveNA4uSjxLwI0qmZRzfzMc6qME=}
