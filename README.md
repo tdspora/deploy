@@ -17,6 +17,14 @@ bash start.sh
 
 2. Start installation
 
+If you have previous installation, please remove old volume manually:
+
+```sh
+docker volume rm dev_jars -f &&\
+```
+
+Start TDM:
+
 ```sh
 export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
 ```
