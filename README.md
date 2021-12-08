@@ -20,7 +20,7 @@ bash start.sh
 If you have previous installation, please remove old volume manually:
 
 ```sh
-docker volume rm dev_jars -f
+docker volume ls --filter name=.jars -q | xargs docker volume rm -f
 ```
 
 Start TDM:
