@@ -178,6 +178,13 @@ services:
       - jars:/tdm_ssh/jars
       - logs:/tmp/logs
 
+tdm-grpc:
+    image: "ridler17/tdm-grpc:latest"
+    hostname: tdm-grpc
+    networks:
+      - tdm
+    restart: always
+
   tdm-nginx:
     image: "ridler17/tdm-nginx:latest"
     tty: true
