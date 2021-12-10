@@ -178,7 +178,7 @@ services:
       - jars:/tdm_ssh/jars
       - logs:/tmp/logs
 
-tdm-grpc:
+  tdm-grpc:
     image: "ridler17/tdm-grpc:latest"
     hostname: tdm-grpc
     networks:
