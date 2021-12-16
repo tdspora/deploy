@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: "ridler17/tdm-db-postgresql:latest"
+    image: "ridler17/tdm-postgres13:latest"
     tty: true
     environment:
       - TDM_DB_USER=${TDM_DB_USER:-tdm}
