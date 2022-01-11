@@ -9,22 +9,27 @@ Please make sure you have an acces to private docker repo for download TDM.
 
 ## How to install TDM from scratch
 
-1. Clean up previous installation
+**Clean up previous installation**
 
 If you have previous installation, please remove old volume manually:
 
 ```sh
 docker volume ls --filter name=.jars -q | xargs docker volume rm -f
 ```
-2. Download `start.sh` file and execute it
+**Download `start.sh` file and execute it**
 
 ```sh
-bash start.sh
+curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/start.sh && chmod +x start.sh && ./start.sh
 ```
 
 Note: Add `-d` parameter to start the application as a backgroud process (daemon).
 ```sh
-bash start.sh -d
+curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/start.sh && chmod +x start.sh && ./start.sh -d
+```
+
+The `start.sh` script will pull new images every time you run it. To avoid excessive downloads, use below command to start the application normally
+```sh
+docker-compose up -d
 ```
 
 ## Configuration
