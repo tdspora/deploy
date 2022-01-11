@@ -9,24 +9,22 @@ Please make sure you have an acces to private docker repo for download TDM.
 
 ## How to install TDM from scratch
 
-1. Download `start.sh` file and execute it
-
-```sh
-bash start.sh
-```
-
-2. Start installation
+1. Clean up previous installation
 
 If you have previous installation, please remove old volume manually:
 
 ```sh
 docker volume ls --filter name=.jars -q | xargs docker volume rm -f
 ```
-
-Start TDM:
+2. Download `start.sh` file and execute it
 
 ```sh
-export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up -d
+bash start.sh
+```
+
+Note: Add `-d` parameter to start the application as a backgroud process (daemon).
+```sh
+bash start.sh -d
 ```
 
 ## Configuration
