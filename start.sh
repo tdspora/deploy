@@ -11,4 +11,4 @@ fi
 echo "default_user=${TDM_RABBIT_MQ_USER:-tdm}">./rabbitconf/rabbitmq.conf
 echo -n "default_pass=${TDM_RABBIT_MQ_PASSWORD:-pa55w0rd}">>./rabbitconf/rabbitmq.conf
 
-docker-compose up $@
+export TDM_HOSTNAME=$(hostname) && docker-compose pull && docker-compose up $@
