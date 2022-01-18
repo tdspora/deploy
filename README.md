@@ -232,3 +232,12 @@ psql:/tmp/tdm.dump:30: ERROR: database "tdm_test" already exists
 ```
 
 It's ok and should not affect on any data.
+
+## Rollback to the previous version
+If you want ot rollback to the specific version copy `rollback.sh` file near to `docker-compose.yml` file and launch it with 
+
+```sh
+bash rollback.sh
+```
+After that you have to provide a version which you want to rollback to. 
+The script will make a separate folder (named by current date) in your home folder and copy an old docker-compose.yml file and postgres database dump into it.
