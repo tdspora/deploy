@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: "ridler17/tdm-postgres13:latest"
+    image: "tdspora/tdm-postgres13:latest"
     tty: true
     environment:
       - TDM_DB_USER=${TDM_DB_USER:-tdm}
@@ -67,7 +67,7 @@ services:
     restart: unless-stopped
 
   tdm_api:
-    image: "ridler17/tdm-api:latest"
+    image: "tdspora/tdm-api:latest"
     tty: true
     environment:
       - TDM_FERNET_KEY=${TDM_FERNET_KEY:-F94ALRGQKFqYQqc-LveNA4uSjxLwI0qmZRzfzMc6qME=}
@@ -110,7 +110,7 @@ services:
         condition: service_healthy
 
   tdm_ui:
-    image: "ridler17/tdm-ui:latest"
+    image: "tdspora/tdm-ui:latest"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
@@ -130,7 +130,7 @@ services:
       retries: 5
 
   spark:
-    image: "ridler17/tdm-spark:latest"
+    image: "tdspora/tdm-spark:latest"
     tty: true
     environment:
         - TDM_SPARK_SSH_USER=${TDM_SPARK_SSH_USER:-tdm}
@@ -151,7 +151,7 @@ services:
       retries: 5
 
   tdm-docs:
-    image: "ridler17/tdm-docs:latest"
+    image: "tdspora/tdm-docs:latest"
     tty: true
     networks:
       - tdm
@@ -164,7 +164,7 @@ services:
       retries: 5
 
   tdm-ssh:
-    image: "ridler17/tdm-ssh:latest"
+    image: "tdspora/tdm-ssh:latest"
     hostname: tdm_ssh
     environment:
       - TDM_FERNET_KEY=${TDM_FERNET_KEY:-F94ALRGQKFqYQqc-LveNA4uSjxLwI0qmZRzfzMc6qME=}
@@ -179,14 +179,14 @@ services:
       - logs:/tmp/logs
 
   tdm-grpc:
-    image: "ridler17/tdm-grpc:latest"
+    image: "tdspora/tdm-grpc:latest"
     hostname: tdm-grpc
     networks:
       - tdm
     restart: always
 
   tdm-nginx:
-    image: "ridler17/tdm-nginx:latest"
+    image: "tdspora/tdm-nginx:latest"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
