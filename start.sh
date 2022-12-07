@@ -1,6 +1,6 @@
 #!/bin/bash
-curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/docker-compose.yml
-if [ ! -d "./rabbitconf" ]; then 
+curl -LO https://raw.githubusercontent.com/tdspora/deploy/main/docker-compose.yml
+if [ ! -d "./rabbitconf" ]; then
   mkdir rabbitconf
 fi
 

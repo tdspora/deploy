@@ -38,8 +38,8 @@ docker volume ls --filter name=.jars -q | xargs docker volume rm -f
 #	6. download appropriate version from github
 cp -R rabbitconf ~/"$CURRENT_DATE"
 rm -rf rabbitconf
-curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/"$VERSION"/start.sh
-curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/"$VERSION"/docker-compose.yml
+curl -LO https://raw.githubusercontent.com/tdspora/deploy/"$VERSION"/start.sh
+curl -LO https://raw.githubusercontent.com/tdspora/deploy/"$VERSION"/docker-compose.yml
 sed '2 {s/^/#/}' start.sh >temp.file && mv temp.file start.sh # comment line in start.sh file
 
 #	7. replace latest tag for ridler17 docker containers to appropriate version

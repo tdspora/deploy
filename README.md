@@ -1,6 +1,6 @@
 # Deployment Scripts
-The repository for `docker-compose` files.  
-The files reference private Docker Hub repository and cannot be used without proper login.  
+The repository for `docker-compose` files.
+The files reference private Docker Hub repository and cannot be used without proper login.
 If you feel authorized, please request the access from the authors.
 
 # TDM installation process
@@ -19,12 +19,12 @@ docker volume ls --filter name=.jars -q | xargs docker volume rm -f
 **Download `start.sh` file and execute it**
 
 ```sh
-curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/start.sh && chmod +x start.sh && ./start.sh
+curl -LO https://raw.githubusercontent.com/tdspora/deploy/main/start.sh && chmod +x start.sh && ./start.sh
 ```
 
 Note: Add `-d` parameter to start the application as a backgroud process (daemon).
 ```sh
-curl -LO https://raw.githubusercontent.com/epmc-tdm/deploy/main/start.sh && chmod +x start.sh && ./start.sh -d
+curl -LO https://raw.githubusercontent.com/tdspora/deploy/main/start.sh && chmod +x start.sh && ./start.sh -d
 ```
 
 The `start.sh` script will pull new images every time you run it. To avoid excessive downloads, use below command to start the application normally
@@ -40,7 +40,7 @@ If you want to change some of the default values
 ```ini
 TDM_FERNET_KEY=jNICCd9MFHW++hGZ9cUAGmsdOCUCtcaI1ZM+2F+pXGs=
 ```
-Encryption key for the Spark job descriptors that can contain secrets such as database user and password. 
+Encryption key for the Spark job descriptors that can contain secrets such as database user and password.
 The simpliest way to generate new key is to run `dd if=/dev/urandom bs=32 count=1 2>/dev/null | openssl base64` in `bash`.
 
 ---
@@ -234,10 +234,10 @@ psql:/tmp/tdm.dump:30: ERROR: database "tdm_test" already exists
 It's ok and should not affect on any data.
 
 ## Rollback to the previous version
-If you want ot rollback to the specific version copy `rollback.sh` file near to `docker-compose.yml` file and launch it with 
+If you want ot rollback to the specific version copy `rollback.sh` file near to `docker-compose.yml` file and launch it with
 
 ```sh
 bash rollback.sh
 ```
-After that you have to provide a version which you want to rollback to. 
+After that you have to provide a version which you want to rollback to.
 The script will make a separate folder (named by current date) in your home folder and copy an old docker-compose.yml file and postgres database dump into it.

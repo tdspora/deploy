@@ -2,13 +2,13 @@ version: '3'
 
 services:
 
-  tdm_ui_refinitiv:
-    image: "ridler17/tdm-ui-refinitiv:latest"
+  tdm_ui_custom:
+    image: "tdspora/tdm-ui-custom:latest"
     tty: true
     environment:
       - TDM_APPLICATION_KEY=${TDM_APPLICATION_KEY:-594df9ea-3565-4145-b9c4-9bbc47ff6200}
     ports:
-      - "${TDM_UI_REFINITIV_PORT:-32082}:32082"
+      - "${TDM_UI_CUSTOM_PORT:-32082}:32082"
     networks:
       - tdm
     restart: unless-stopped
@@ -16,9 +16,9 @@ services:
       - "tdm_api:backend"
     depends_on:
       - "tdm_api"
-    hostname: tdm_ui_refinitiv
+    hostname: tdm_ui_custom
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://tdm_ui_refinitiv:32082/#login || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://tdm_ui_custom:32082/#login || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5

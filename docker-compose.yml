@@ -206,7 +206,6 @@ services:
       - tdm_api
       - tdm-docs
       - spark
-#      - tdm-keycloak
 
 volumes:
   postgres:
