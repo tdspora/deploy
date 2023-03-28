@@ -3,11 +3,11 @@ The repository for `docker-compose` files.
 The files reference private Docker Hub repository and cannot be used without proper login.
 If you feel authorized, please request the access from the authors.
 
-# TDM installation process
+# TDspora installation process
 
-Please make sure you have an acces to private docker repo for download TDM.
+Please make sure you have an acces to private docker repo for download TDspora.
 
-## How to install TDM from scratch
+## How to install TDspora from scratch
 
 **Clean up previous installation**
 
@@ -157,8 +157,7 @@ The FQDN of the host serving the application REST API endpoints. Along with `TDM
 
 ## Upgrading and restoring repository contents
 
-If you are performing an upgrade you have to backup all your data saved into TDM tool.
-Since we use postgres database the backup process is quite simple.
+If you are performing an upgrade you have to backup all your configuration data persisted in a PostgreSQL database.
 
 Check the variable `COMPOSE_PROJECT_NAME` in your `.env.` file
 
@@ -193,22 +192,22 @@ docker volume ls
 docker volume rm <compose_project_name>_postgres
 ```
 
-5. Launch TDM with docker-compose
+5. Launch TDspora with docker-compose
 
 ```sh
 docker-compose pull && docker-compose up -d
 ```
 
-6. Do not login into TDM for that moment*.
+6. Do not login into TDspora at that moment*.
 Copy dump to the container:
 
 ```sh
 docker cp /tmp/tdm.dump <container_name>:/tmp
 ```
 
-**If you performed login into TDM you have to restart TDM Postgres container because login operation creating session within Postgres DB and you will not be able to drop database*
+**If you performed login into TDspora you have to restart the PostgreSQL container because login operation creating session within Postgres DB and you will not be able to drop database*
 
-7. Login into Postgres container (or use Portainer) with Postgres user and bash shell:
+7. Login into PostgreSQL container (or use Portainer) with PostgreSQL user and bash shell:
 
 ```sh
 docker exec -it -u postgres <container_name> bash
