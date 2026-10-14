@@ -101,6 +101,8 @@ services:
       - csv_vol:/tdm_api/csv
       - jars:/tdm_api/lib
       - jsons:/var/configurations/
+      # training run roots, shared with spark (and tdm-ml): mounted at the same path in each
+      - trainings:/var/trainings
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -144,6 +146,7 @@ services:
     volumes:
       - spark-events:/tmp/spark-events
       - spark-logs:/tmp/spark-logs
+      - trainings:/var/trainings
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
       interval: 30s
@@ -215,6 +218,7 @@ volumes:
   jsons:
   jars:
   logs:
+  trainings:
 
 networks:
   tdm:
