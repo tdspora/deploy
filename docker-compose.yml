@@ -126,7 +126,7 @@ services:
       - "tdm_api"
     hostname: tdm_ui
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://tdm_ui:32080/#login || exit 1"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:32080/"]
       interval: 30s
       timeout: 5s
       retries: 5
