@@ -161,7 +161,7 @@ services:
     restart: unless-stopped
     hostname: docs
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://docs:3000/ || exit 1"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/site/"]
       interval: 10s
       timeout: 5s
       retries: 5
