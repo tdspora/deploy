@@ -153,6 +153,25 @@ The FQDN of the host serving the application REST API endpoints. Along with `TDM
 
 ---
 
+## Custom nginx configuration or TLS certificates
+
+The `tdm-nginx` container runs nginx as the non-root user `nginx` (uid 65532). It still listens on ports 80, 8080 and 18080 inside the container, so the port settings in `.env` and the port mappings in `docker-compose.yml` stay as they are.
+
+A standard installation mounts nothing into `tdm-nginx` and needs no action. If you mount your own files into it, for example an nginx configuration or TLS certificates:
+
+- Make every mounted file readable by uid 65532, for example `chmod 644 <file>`. For a private key, use `chown 65532 <key>` and `chmod 600 <key>` instead.
+- If you mount a whole `/etc/nginx/conf.d` directory, make it writable by uid 65532, because the container writes `default.conf` there when it starts.
+- Mount certificates outside `/root`, for example at `/etc/nginx/cert`, because uid 65532 cannot read `/root`.
+
+Docker 20.10 and later allows a non-root process to listen on port 80 inside a container. If your container runtime does not allow it, the `tdm-nginx` log shows `bind() to 0.0.0.0:80 failed (13: Permission denied)`. Add this to the `tdm-nginx` service in `docker-compose.yml`:
+
+```yaml
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+```
+
+---
+
 # Maintenance
 
 ## Upgrading and restoring repository contents
